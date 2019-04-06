@@ -1,0 +1,89 @@
+import java.util.*;
+
+class Schedule{
+   private final int token;
+   private final String sname;
+   private final double t;
+   //initializing values
+   public Schedule(int id, String sname, double t) {
+      super();
+      this.token = id;
+      this.sname = sname;
+      this.t = t;
+   }
+   //returns token
+   public int getToken() {
+      return token;
+   }
+   //returns jobs' name
+   public String getSname() {
+      return sname;
+   }
+   //returns priority
+   public double getT() {
+      return t;
+   }
+}
+
+class MyComparator implements Comparator<Schedule>{
+    @Override
+    public int compare(Schedule a, Schedule b){
+        if(a.getT()<b.getT()){
+            return 1;
+        }
+        else if(a.getT()==b.getT()){
+            if(a.getSname().compareTo(b.getSname())>0){
+                return 1;
+            }
+            else if(a.getSname().compareTo(b.getSname())==0){
+                if(a.getToken()<b.getToken()){
+                    return 1;
+                }
+                else{
+                    return -1;
+                }
+            }
+            else{
+                return -1;
+            }
+        }
+        else{
+            return -1;
+        }
+    }
+}
+
+public class PriQ {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Comparator<Schedule> comp= new MyComparator(); 
+        int totalEvents = Integer.parseInt(in.nextLine());
+        PriorityQueue<Schedule> queue= new PriorityQueue<>(totalEvents, comp);
+        while(totalEvents>0){
+            String event = in.next();
+            if(event.equals("EXECUTE")){
+                Schedule s=queue.poll();
+                if(s==null){
+                    System.out.print("");
+                }
+            }
+            else{
+                String name=in.next();
+                double t=Double.parseDouble(in.next());
+                int token=Integer.parseInt(in.next());
+                Schedule s=new Schedule(token, name, t);
+                queue.add(s);
+            }
+            totalEvents--;
+        }
+        Schedule s=queue.poll();
+        if(s==null){
+            System.out.println("EMPTY");
+            return;
+        }
+        while(s!=null){
+            System.out.println(s.getFname());
+            s=queue.poll();
+        }
+    }
+}
